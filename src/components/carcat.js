@@ -1,16 +1,43 @@
-import React from 'react';
-import '../App.css';
+import React from 'react'
+import Cars from './cars';
+import axios from 'axios';
 
-class Carcat extends React.Component {
 
-  render() {
-    return (
-      <div className="App">
-        <h1>Hello World from the Car Catalogue</h1>
-        <h2>It is {new Date().toLocaleTimeString()}.</h2>
-      </div>
-    );
-  }
+class CarCat extends React.Component{
+constructor(){
+    super();
+    this.ReloadDataMethod = this.ReloadDataMethod.bind(this);
 }
+    state = {
+        cars: []
+    };
 
-export default Carcat;
+    componentDidMount() {
+        axios.get('http://localhost:4000/api/cars')
+        .then((response)=>{
+            this.setState({cars: response.data.cars})
+        })
+        .catch((error)=>{
+            console.log(error);
+        });
+    }
+
+    ReloadDataMethod(){
+        axios.get('http://localhost:4000/api/cars')
+        .then((response)=>{
+            this.setState({cars: response.data.cars})
+        })
+        .catch((error)=>{
+            console.log(error);
+        });
+    }
+    render(){
+        return(
+            <div>
+                <h1>Hello from Read Component</h1>
+                <Cars mycars={this.state.cars} ReloadDataMethod={this.ReloadDataMethod} ></Cars>
+            </div>
+        );
+    }
+}
+export default CarCat;

@@ -26,38 +26,38 @@ app.use(bodyParser.json())
 
 const Schema = mongoose.Schema;
 
-const carSchema = new Schema({
+const carschema = new Schema({
     Model:String,
     year:String,
-    ImaGE:String
+    Image:String
 })
 
-const CarModel = mongoose.model('car', carSchema);
+const CarModel = mongoose.model('car', carschema);
 
 app.get('/test', (req, res) => {
     res.sendFile(path.join(__dirname + '/index.html'));
 })
 
-app.get('/api/Cars', (req, res) => {
+app.get('/api/cars', (req, res) => {
 
     CarModel.find((error, data) =>{
-        res.json({Cars:data});
+        res.json({cars:data});
     })
 })
 
-    app.delete('/api/Cars/:id', (req, res)=>{
+    app.delete('/api/cars/:id', (req, res)=>{
         console.log(req.params.id);
     
-        MovieModel.deleteOne({_id: req.params.id},
+        CarModel.deleteOne({_id: req.params.id},
             (error, data) =>{
                 res.json(data);
             })
     })
 
-    app.put('/api/Cars/:id', (req, res)=>{
+    app.put('/api/cars/:id', (req, res)=>{
         console.log("Edit: "+req.params.id);
         console.log(req.body);
-        MovieModel.findByIdAndUpdate(req.params.id,
+        CarModel.findByIdAndUpdate(req.params.id,
            
             req.body,
             {new:true},
@@ -66,11 +66,26 @@ app.get('/api/Cars', (req, res) => {
             })
     })
     
-    app.get('/api/Cars/:id', (req, res)=>{
+    app.get('/api/cars/:id', (req, res)=>{
         console.log("GET" + req.params.id);
-        MovieModel.findById(req.params.id,(error,data)=>{
+        CarModel.findById(req.params.id,(error,data)=>{
             res.json(data);
         })
+    })
+
+    app.post('/api/cars', (req,res)=>{
+        console.log('Post request Successful');
+        console.log(req.body.Model);
+        console.log(req.body.year);
+        console.log(req.body.Image);
+    
+        CarModel.create({
+            Model:req.body.Model, 
+            year:req.body.year, 
+            Image:req.body.Image
+        });
+    
+        res.json('post recieved!');
     })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
